@@ -22,8 +22,9 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const links = compiled.querySelectorAll('nav a');
 
-    expect(links.length).toBe(2);
+    expect(links.length).toBe(3);
     expect(links[0].textContent).toContain('Add word');
     expect(links[1].textContent).toContain('Search');
+    expect(links[2].textContent).toContain('Word types');
   });
 });

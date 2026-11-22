@@ -1,4 +1,4 @@
 package com.example.backcore.dto;
 
-public record WordRequestDTO(String word, String translation) {
+public record WordRequestDTO(String word, String translation, Short wordTypeId) {
 }

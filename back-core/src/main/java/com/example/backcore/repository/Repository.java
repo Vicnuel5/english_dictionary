@@ -1,6 +1,7 @@
 package com.example.backcore.repository;
 
 import com.example.backcore.dto.DictionaryEntryDTO;
+import com.example.backcore.dto.WordTypeDTO;
 import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
@@ -17,13 +18,14 @@ public class Repository {
 		this.jdbcClient = jdbcClient;
 	}
 
-	public void save(String word, String translation) {
+	public void save(String word, String translation, short wordTypeId) {
 		jdbcClient.sql("""
-				INSERT INTO dictionary (word, translation)
-				VALUES (:word, :translation)
+				INSERT INTO dictionary (word, translation, word_type_id)
+				VALUES (:word, :translation, :wordTypeId)
 				""")
 				.param("word", word)
 				.param("translation", translation)
+				.param("wordTypeId", wordTypeId)
 				.update();
 	}
 
@@ -41,6 +43,27 @@ public class Repository {
 						rs.getString("word"),
 						rs.getString("translation")))
 				.list();
+	}
+
+	public List<WordTypeDTO> findAllWordTypes() {
+		return jdbcClient.sql("""
+				SELECT id, word_type
+				FROM word_types
+				ORDER BY word_type
+				""")
+				.query((rs, rowNum) -> new WordTypeDTO(
+						rs.getShort("id"),
+						rs.getString("word_type")))
+				.list();
+	}
+
+	public void saveWordType(String wordType) {
+		jdbcClient.sql("""
+				INSERT INTO word_types (word_type)
+				VALUES (:wordType)
+				""")
+				.param("wordType", wordType)
+				.update();
 	}
 
 }

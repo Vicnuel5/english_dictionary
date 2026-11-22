@@ -1,0 +1,62 @@
+<section class="word-types">
+  <header class="page-header">
+    <div>
+      <h1 class="title">Word types</h1>
+      <p class="subtitle">Manage the categories used to classify dictionary words.</p>
+    </div>
+
+    <button class="primary" type="button" (click)="toggleForm()">
+      {{ formOpen() ? 'Cancel' : 'Add word type' }}
+    </button>
+  </header>
+
+  @if (formOpen()) {
+    <form class="add-form" (submit)="addWordType($event)">
+      <label class="sr-only" for="wordType">New word type</label>
+      <input
+        id="wordType"
+        name="wordType"
+        class="input"
+        type="text"
+        placeholder="New word type"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        autofocus
+        [value]="newWordType()"
+        (input)="onWordTypeInput($event)"
+      />
+      <button class="primary" type="submit" [disabled]="saving()">Save</button>
+    </form>
+  }
+
+  @if (status()) {
+    <p class="status" [class.status-error]="statusError()" role="status">{{ status() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="hint">Loading word types...</p>
+  } @else if (loadError()) {
+    <p class="empty" role="alert">Could not load word types.</p>
+  } @else if (wordTypes().length) {
+    <table class="results">
+      <caption class="sr-only">
+        All word types
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Word type</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (wordType of wordTypes(); track wordType.id) {
+          <tr>
+            <td>{{ wordType.wordType }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="empty">No word types yet. Add the first one.</p>
+  }
+</section>

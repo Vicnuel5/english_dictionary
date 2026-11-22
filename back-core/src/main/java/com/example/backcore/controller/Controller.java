@@ -3,10 +3,15 @@ package com.example.backcore.controller;
 import com.example.backcore.dto.DictionaryEntryDTO;
 import com.example.backcore.dto.HelloDTO;
 import com.example.backcore.dto.WordRequestDTO;
+import com.example.backcore.dto.WordTypeDTO;
+import com.example.backcore.dto.WordTypeRequestDTO;
 import com.example.backcore.service.Service;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +45,34 @@ public class Controller {
 
 	@PostMapping("/words")
 	public ResponseEntity<Void> addWord(@RequestBody WordRequestDTO request) {
-		log.info("Word received: word='{}', translation='{}'", request.word(), request.translation());
-		service.addWord(request);
-		return ResponseEntity.noContent().build();
+		log.info("Word received: word='{}', translation='{}', wordTypeId='{}'",
+				request.word(), request.translation(), request.wordTypeId());
+
+		try {
+			service.addWord(request);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException exception) {
+			return ResponseEntity.badRequest().build();
+		} catch (DataIntegrityViolationException exception) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@GetMapping("/word-types")
+	public List<WordTypeDTO> listWordTypes() {
+		return service.listWordTypes();
+	}
+
+	@PostMapping("/word-types")
+	public ResponseEntity<Void> addWordType(@RequestBody WordTypeRequestDTO request) {
+		try {
+			service.addWordType(request);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException exception) {
+			return ResponseEntity.badRequest().build();
+		} catch (DuplicateKeyException exception) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 
 }

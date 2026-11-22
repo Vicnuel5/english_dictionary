@@ -12,5 +12,11 @@ export const routes: Routes = [
     title: 'Search · English Dictionary',
     loadComponent: () => import('./features/search/search').then((m) => m.Search),
   },
+  {
+    path: 'word-types',
+    title: 'Word types · English Dictionary',
+    loadComponent: () =>
+      import('./features/word-types/word-types').then((m) => m.WordTypes),
+  },
   { path: '**', redirectTo: 'add' },
 ];

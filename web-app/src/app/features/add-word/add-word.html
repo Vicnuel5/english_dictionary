@@ -1,23 +1,56 @@
 <form class="card" (submit)="addWord($event)">
   <h1 class="title">Add a word</h1>
-  <p class="subtitle">Enter the word and its translation.</p>
+  <p class="subtitle">Enter the word, its translation and word type.</p>
 
-  <div class="field">
-    <label class="sr-only" for="word">English word</label>
-    <input
-      id="word"
-      name="word"
-      class="input"
-      type="text"
-      placeholder="Word in English"
-      autocomplete="off"
-      autocapitalize="none"
-      spellcheck="false"
-      required
-      [value]="word()"
-      (input)="onWordInput($event)"
-    />
+  <div class="field-row">
+    <div class="field field--word">
+      <label class="sr-only" for="word">English word</label>
+      <input
+        id="word"
+        name="word"
+        class="input"
+        type="text"
+        placeholder="Word in English"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        required
+        [value]="word()"
+        (input)="onWordInput($event)"
+      />
+    </div>
+
+    <div class="field field--type">
+      <label class="sr-only" for="wordType">Word type</label>
+      <select
+        id="wordType"
+        name="wordType"
+        class="input select"
+        required
+        [value]="wordTypeId() ?? ''"
+        [disabled]="typesLoading() || wordTypes().length === 0"
+        (change)="onWordTypeChange($event)"
+      >
+        <option value="" disabled>
+          {{ typesLoading() ? 'Loading...' : 'Word type' }}
+        </option>
+        @for (wordType of wordTypes(); track wordType.id) {
+          <option [value]="wordType.id">{{ wordType.wordType }}</option>
+        }
+      </select>
+    </div>
   </div>
+
+  @if (typesError()) {
+    <p class="field-hint field-hint--error">
+      Could not load word types.
+      <a routerLink="/word-types">Manage word types</a>.
+    </p>
+  } @else if (!typesLoading() && !wordTypes().length) {
+    <p class="field-hint">
+      No word types available. <a routerLink="/word-types">Add one first</a>.
+    </p>
+  }
 
   <div class="field">
     <label class="sr-only" for="translation">Translation</label>
@@ -34,7 +67,13 @@
     />
   </div>
 
-  <button class="submit" type="submit" [disabled]="loading()">Add word</button>
+  <button
+    class="submit"
+    type="submit"
+    [disabled]="loading() || typesLoading() || wordTypes().length === 0"
+  >
+    Add word
+  </button>
 
   @if (status()) {
     <p class="status" [class.status-error]="statusError()" role="status">{{ status() }}</p>

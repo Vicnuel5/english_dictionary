@@ -2,6 +2,8 @@ package com.example.backcore.service;
 
 import com.example.backcore.dto.DictionaryEntryDTO;
 import com.example.backcore.dto.WordRequestDTO;
+import com.example.backcore.dto.WordTypeDTO;
+import com.example.backcore.dto.WordTypeRequestDTO;
 import com.example.backcore.repository.Repository;
 import java.util.List;
 
@@ -19,7 +21,16 @@ public class Service {
 	}
 
 	public void addWord(WordRequestDTO request) {
-		repository.save(request.word(), request.translation());
+		if (request.word() == null || request.word().isBlank()
+				|| request.translation() == null || request.translation().isBlank()
+				|| request.wordTypeId() == null) {
+			throw new IllegalArgumentException("Word, translation and word type are required.");
+		}
+
+		repository.save(
+				request.word().trim(),
+				request.translation().trim(),
+				request.wordTypeId());
 	}
 
 	public List<DictionaryEntryDTO> searchWords(String query) {
@@ -28,6 +39,18 @@ public class Service {
 		}
 
 		return repository.findByWordContaining(query.trim());
+	}
+
+	public List<WordTypeDTO> listWordTypes() {
+		return repository.findAllWordTypes();
+	}
+
+	public void addWordType(WordTypeRequestDTO request) {
+		if (request.wordType() == null || request.wordType().isBlank()) {
+			throw new IllegalArgumentException("Word type is required.");
+		}
+
+		repository.saveWordType(request.wordType().trim());
 	}
 
 }
