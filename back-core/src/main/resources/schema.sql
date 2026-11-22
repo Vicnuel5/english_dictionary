@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS dictionary (
+    id BIGSERIAL PRIMARY KEY,
+    word VARCHAR(255) NOT NULL,
+    translation VARCHAR(255) NOT NULL
+);

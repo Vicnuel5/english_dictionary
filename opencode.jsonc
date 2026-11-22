@@ -1,0 +1,29 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "permissions": [
+    // Hard boundary: no access to paths outside this project.
+    { "action": "external_directory", "resource": "*", "effect": "deny" },
+
+    // Ask before creating or modifying any file inside the project.
+    { "action": "edit", "resource": "*", "effect": "ask" },
+
+    // Running commands on the host requires explicit approval.
+    { "action": "shell", "resource": "*", "effect": "ask" },
+
+    // Network access is allowed without prompting.
+    { "action": "webfetch", "resource": "*", "effect": "allow" },
+    { "action": "websearch", "resource": "*", "effect": "allow" },
+
+    // Desktop browser access is blocked entirely.
+    { "action": "browser", "resource": "*", "effect": "deny" },
+
+    // No delegated sessions in this project.
+    { "action": "subagent", "resource": "*", "effect": "deny" }
+  ],
+
+  "policies": [
+    // Block every MCP server (and its tools), wherever it was configured.
+    { "action": "integration.use", "resource": "mcp:*", "effect": "deny" }
+  ]
+}
