@@ -1,0 +1,27 @@
+<header class="header">
+  <a class="brand" routerLink="/">English Dictionary</a>
+
+  <nav class="tabs" aria-label="Sections">
+    <a
+      class="tab"
+      routerLink="/add"
+      routerLinkActive="tab--active"
+      ariaCurrentWhenActive="page"
+    >
+      Add word
+    </a>
+
+    <a
+      class="tab"
+      routerLink="/search"
+      routerLinkActive="tab--active"
+      ariaCurrentWhenActive="page"
+    >
+      Search
+    </a>
+  </nav>
+</header>
+
+<main class="main">
+  <router-outlet />
+</main>

@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  align-self: flex-start;
+  width: 100%;
+  max-width: 720px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  padding: 0 1.25rem;
+  font: inherit;
+  font-size: 1rem;
+  color: #202124;
+  background: #fff;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  outline: none;
+  transition: box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.input::placeholder {
+  color: #9aa0a6;
+}
+
+.input:hover {
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.18);
+}
+
+.input:focus {
+  border-color: #dadce0;
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.24);
+}
+
+.submit {
+  height: 48px;
+  padding: 0 1.75rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #fff;
+  background: #1a73e8;
+  border: 0;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+
+.submit:hover {
+  background: #1765cc;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+}
+
+.submit:active {
+  background: #1558b0;
+}
+
+.submit:disabled {
+  background: #9aa0a6;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.submit:focus-visible {
+  outline: 3px solid rgba(26, 115, 232, 0.4);
+  outline-offset: 2px;
+}
+
+.results {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.results th {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  color: #5f6368;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.results td {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  color: #202124;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.results tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.hint,
+.empty {
+  margin: 2rem 0 0;
+  font-size: 0.875rem;
+  text-align: center;
+  color: #5f6368;
+}
+
+@media (max-width: 480px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input {
+    flex: none;
+  }
+
+  .submit {
+    width: 100%;
+  }
+}

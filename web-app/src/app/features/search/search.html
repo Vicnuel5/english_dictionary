@@ -1,0 +1,50 @@
+<section class="search">
+  <form class="search-bar" (submit)="search($event)">
+    <label class="sr-only" for="query">Search word</label>
+    <input
+      id="query"
+      name="query"
+      class="input"
+      type="search"
+      placeholder="Search a word"
+      autocomplete="off"
+      autocapitalize="none"
+      spellcheck="false"
+      [value]="query()"
+      (input)="onQueryInput($event)"
+    />
+    <button class="submit" type="submit" [disabled]="loading()">Search</button>
+  </form>
+
+  @if (loading()) {
+    <p class="hint">Searching...</p>
+  } @else if (error()) {
+    <p class="empty" role="alert">Could not reach the server.</p>
+  } @else if (searched()) {
+    @if (results().length) {
+      <table class="results">
+        <caption class="sr-only">
+          Matches for "{{ submittedQuery() }}"
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Word</th>
+            <th scope="col">Translation</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entry of results(); track entry.word) {
+            <tr>
+              <td>{{ entry.word }}</td>
+              <td>{{ entry.translation }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p class="empty">No matches for "{{ submittedQuery() }}".</p>
+    }
+  } @else {
+    <p class="hint">Type a word and press Search.</p>
+  }
+</section>

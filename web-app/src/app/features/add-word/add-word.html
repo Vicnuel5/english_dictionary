@@ -1,0 +1,42 @@
+<form class="card" (submit)="addWord($event)">
+  <h1 class="title">Add a word</h1>
+  <p class="subtitle">Enter the word and its translation.</p>
+
+  <div class="field">
+    <label class="sr-only" for="word">English word</label>
+    <input
+      id="word"
+      name="word"
+      class="input"
+      type="text"
+      placeholder="Word in English"
+      autocomplete="off"
+      autocapitalize="none"
+      spellcheck="false"
+      required
+      [value]="word()"
+      (input)="onWordInput($event)"
+    />
+  </div>
+
+  <div class="field">
+    <label class="sr-only" for="translation">Translation</label>
+    <input
+      id="translation"
+      name="translation"
+      class="input"
+      type="text"
+      placeholder="Translation in Spanish"
+      autocomplete="off"
+      required
+      [value]="translation()"
+      (input)="onTranslationInput($event)"
+    />
+  </div>
+
+  <button class="submit" type="submit" [disabled]="loading()">Add word</button>
+
+  @if (status()) {
+    <p class="status" [class.status-error]="statusError()" role="status">{{ status() }}</p>
+  }
+</form>
