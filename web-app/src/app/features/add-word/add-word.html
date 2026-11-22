@@ -41,17 +41,6 @@
     </div>
   </div>
 
-  @if (typesError()) {
-    <p class="field-hint field-hint--error">
-      Could not load word types.
-      <a routerLink="/word-types">Manage word types</a>.
-    </p>
-  } @else if (!typesLoading() && !wordTypes().length) {
-    <p class="field-hint">
-      No word types available. <a routerLink="/word-types">Add one first</a>.
-    </p>
-  }
-
   <div class="field">
     <label class="sr-only" for="translation">Translation</label>
     <input
@@ -74,8 +63,4 @@
   >
     Add word
   </button>
-
-  @if (status()) {
-    <p class="status" [class.status-error]="statusError()" role="status">{{ status() }}</p>
-  }
 </form>

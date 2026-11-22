@@ -3,6 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { WordType } from '../../core/models/word-type';
 import { WordTypeRequestDTO } from '../../core/models/word-type-request-dto';
 import { DictionaryApi } from '../../core/services/dictionary-api';
+import { NotificationService } from '../../core/services/notification';
 
 @Component({
   selector: 'app-word-types',
@@ -11,6 +12,7 @@ import { DictionaryApi } from '../../core/services/dictionary-api';
 })
 export class WordTypes implements OnInit {
   private readonly api = inject(DictionaryApi);
+  private readonly notificationService = inject(NotificationService);
 
   protected readonly wordTypes = signal<WordType[]>([]);
   protected readonly loading = signal(true);
@@ -19,8 +21,6 @@ export class WordTypes implements OnInit {
   protected readonly formOpen = signal(false);
   protected readonly newWordType = signal('');
   protected readonly saving = signal(false);
-  protected readonly status = signal('');
-  protected readonly statusError = signal(false);
 
   ngOnInit(): void {
     this.loadWordTypes();
@@ -29,12 +29,10 @@ export class WordTypes implements OnInit {
   protected toggleForm(): void {
     this.formOpen.update((open) => !open);
     this.newWordType.set('');
-    this.clearStatus();
   }
 
   protected onWordTypeInput(event: Event): void {
     this.newWordType.set((event.target as HTMLInputElement).value);
-    this.clearStatus();
   }
 
   protected addWordType(event: Event): void {
@@ -47,14 +45,12 @@ export class WordTypes implements OnInit {
     const wordType = this.newWordType().trim();
 
     if (!wordType) {
-      this.statusError.set(true);
-      this.status.set('Word type is required.');
+      this.notificationService.error('Word type is required.');
       return;
     }
 
     const request: WordTypeRequestDTO = { wordType };
 
-    this.clearStatus();
     this.saving.set(true);
 
     this.api.addWordType(request).subscribe({
@@ -62,13 +58,12 @@ export class WordTypes implements OnInit {
         this.saving.set(false);
         this.formOpen.set(false);
         this.newWordType.set('');
-        this.status.set('Word type added.');
+        this.notificationService.success('Word type added.');
         this.loadWordTypes();
       },
       error: (error: unknown) => {
         this.saving.set(false);
-        this.statusError.set(true);
-        this.status.set(
+        this.notificationService.error(
           error instanceof HttpErrorResponse && error.status === 409
             ? 'That word type already exists.'
             : 'Could not add the word type.',
@@ -91,13 +86,9 @@ export class WordTypes implements OnInit {
         this.wordTypes.set([]);
         this.loading.set(false);
         this.loadError.set(true);
+        this.notificationService.error('Could not load word types.');
         console.error('[dictionary] load word types request failed:', error);
       },
     });
-  }
-
-  private clearStatus(): void {
-    this.status.set('');
-    this.statusError.set(false);
   }
 }

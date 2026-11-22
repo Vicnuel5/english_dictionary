@@ -1,10 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { NotificationService } from '../../core/services/notification';
 import { Search } from './search';
 
 describe('Search', () => {
   let http: HttpTestingController;
+  let notifications: NotificationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -13,9 +15,11 @@ describe('Search', () => {
     }).compileComponents();
 
     http = TestBed.inject(HttpTestingController);
+    notifications = TestBed.inject(NotificationService);
   });
 
   afterEach(() => {
+    notifications.notifications().forEach((notification) => notifications.dismiss(notification.id));
     http.verify();
   });
 
@@ -92,7 +96,7 @@ describe('Search', () => {
     expect(compiled.querySelectorAll('tbody tr').length).toBe(0);
   });
 
-  it('should show an error state when the backend fails', async () => {
+  it('should show an error notification when the backend fails', async () => {
     const fixture = TestBed.createComponent(Search);
     await fixture.whenStable();
 
@@ -113,6 +117,9 @@ describe('Search', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(compiled.querySelector('.empty')?.textContent).toContain('Could not reach the server');
+    expect(notifications.notifications()).toContainEqual(
+      expect.objectContaining({ type: 'error', message: 'Could not search words.' }),
+    );
+    expect(compiled.querySelector('.empty')).toBeNull();
   });
 });

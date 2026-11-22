@@ -30,33 +30,29 @@
     </form>
   }
 
-  @if (status()) {
-    <p class="status" [class.status-error]="statusError()" role="status">{{ status() }}</p>
-  }
-
   @if (loading()) {
     <p class="hint">Loading word types...</p>
-  } @else if (loadError()) {
-    <p class="empty" role="alert">Could not load word types.</p>
-  } @else if (wordTypes().length) {
-    <table class="results">
-      <caption class="sr-only">
-        All word types
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Word type</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (wordType of wordTypes(); track wordType.id) {
+  } @else if (!loadError()) {
+    @if (wordTypes().length) {
+      <table class="results">
+        <caption class="sr-only">
+          All word types
+        </caption>
+        <thead>
           <tr>
-            <td>{{ wordType.wordType }}</td>
+            <th scope="col">Word type</th>
           </tr>
-        }
-      </tbody>
-    </table>
-  } @else {
-    <p class="empty">No word types yet. Add the first one.</p>
+        </thead>
+        <tbody>
+          @for (wordType of wordTypes(); track wordType.id) {
+            <tr>
+              <td>{{ wordType.wordType }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p class="empty">No word types yet. Add the first one.</p>
+    }
   }
 </section>

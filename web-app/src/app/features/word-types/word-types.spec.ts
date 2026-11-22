@@ -1,10 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { NotificationService } from '../../core/services/notification';
 import { WordTypes } from './word-types';
 
 describe('WordTypes', () => {
   let http: HttpTestingController;
+  let notifications: NotificationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -13,9 +15,11 @@ describe('WordTypes', () => {
     }).compileComponents();
 
     http = TestBed.inject(HttpTestingController);
+    notifications = TestBed.inject(NotificationService);
   });
 
   afterEach(() => {
+    notifications.notifications().forEach((notification) => notifications.dismiss(notification.id));
     http.verify();
   });
 
@@ -100,7 +104,9 @@ describe('WordTypes', () => {
     await fixture.whenStable();
 
     expect(compiled.querySelector('tbody tr')?.textContent).toContain('adjective');
-    expect(compiled.querySelector('.status')?.textContent).toContain('Word type added');
+    expect(notifications.notifications()).toContainEqual(
+      expect.objectContaining({ type: 'success', message: 'Word type added.' }),
+    );
   });
 
   it('should show an error when the word type already exists', async () => {
@@ -129,6 +135,8 @@ describe('WordTypes', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(compiled.querySelector('.status')?.textContent).toContain('already exists');
+    expect(notifications.notifications()).toContainEqual(
+      expect.objectContaining({ type: 'error', message: 'That word type already exists.' }),
+    );
   });
 });

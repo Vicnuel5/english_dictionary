@@ -18,33 +18,33 @@
 
   @if (loading()) {
     <p class="hint">Searching...</p>
-  } @else if (error()) {
-    <p class="empty" role="alert">Could not reach the server.</p>
-  } @else if (searched()) {
-    @if (results().length) {
-      <table class="results">
-        <caption class="sr-only">
-          Matches for "{{ submittedQuery() }}"
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Word</th>
-            <th scope="col">Translation</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (entry of results(); track entry.word) {
+  } @else if (!error()) {
+    @if (searched()) {
+      @if (results().length) {
+        <table class="results">
+          <caption class="sr-only">
+            Matches for "{{ submittedQuery() }}"
+          </caption>
+          <thead>
             <tr>
-              <td>{{ entry.word }}</td>
-              <td>{{ entry.translation }}</td>
+              <th scope="col">Word</th>
+              <th scope="col">Translation</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (entry of results(); track entry.word) {
+              <tr>
+                <td>{{ entry.word }}</td>
+                <td>{{ entry.translation }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="empty">No matches for "{{ submittedQuery() }}".</p>
+      }
     } @else {
-      <p class="empty">No matches for "{{ submittedQuery() }}".</p>
+      <p class="hint">Type a word and press Search.</p>
     }
-  } @else {
-    <p class="hint">Type a word and press Search.</p>
   }
 </section>

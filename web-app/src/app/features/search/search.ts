@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DictionaryEntry } from '../../core/models/dictionary-entry';
 import { DictionaryApi } from '../../core/services/dictionary-api';
+import { NotificationService } from '../../core/services/notification';
 
 @Component({
   selector: 'app-search',
@@ -9,6 +10,7 @@ import { DictionaryApi } from '../../core/services/dictionary-api';
 })
 export class Search {
   private readonly api = inject(DictionaryApi);
+  private readonly notificationService = inject(NotificationService);
 
   protected readonly query = signal('');
   protected readonly submittedQuery = signal('');
@@ -51,9 +53,10 @@ export class Search {
       },
       error: (requestError: unknown) => {
         this.results.set([]);
-        this.searched.set(true);
+        this.searched.set(false);
         this.loading.set(false);
         this.error.set(true);
+        this.notificationService.error('Could not search words.');
         console.error('[dictionary] search request failed:', requestError);
       },
     });

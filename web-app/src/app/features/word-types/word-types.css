@@ -100,16 +100,6 @@
   box-shadow: 0 1px 6px rgba(32, 33, 36, 0.24);
 }
 
-.status {
-  margin: 1rem 0 0;
-  font-size: 0.8125rem;
-  color: #188038;
-}
-
-.status-error {
-  color: #d93025;
-}
-
 .results {
   width: 100%;
   margin-top: 2rem;

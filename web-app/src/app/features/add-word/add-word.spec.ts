@@ -2,10 +2,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { NotificationService } from '../../core/services/notification';
 import { AddWord } from './add-word';
 
 describe('AddWord', () => {
   let http: HttpTestingController;
+  let notifications: NotificationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,9 +16,11 @@ describe('AddWord', () => {
     }).compileComponents();
 
     http = TestBed.inject(HttpTestingController);
+    notifications = TestBed.inject(NotificationService);
   });
 
   afterEach(() => {
+    notifications.notifications().forEach((notification) => notifications.dismiss(notification.id));
     http.verify();
   });
 
@@ -102,7 +106,45 @@ describe('AddWord', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(compiled.querySelector('.status')?.textContent).toContain('Word added');
+    expect(notifications.notifications()).toContainEqual(
+      expect.objectContaining({ type: 'success', message: 'Word added.' }),
+    );
     expect(wordType.value).toBe('');
+  });
+
+  it('should show an error notification when the word cannot be added', async () => {
+    const fixture = TestBed.createComponent(AddWord);
+    await fixture.whenStable();
+
+    http.expectOne('/api/word-types').flush([{ id: 1, wordType: 'noun' }]);
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const word = compiled.querySelector<HTMLInputElement>('#word')!;
+    const translation = compiled.querySelector<HTMLInputElement>('#translation')!;
+    const wordType = compiled.querySelector<HTMLSelectElement>('#wordType')!;
+
+    word.value = 'apple';
+    word.dispatchEvent(new Event('input'));
+    translation.value = 'manzana';
+    translation.dispatchEvent(new Event('input'));
+    wordType.value = '1';
+    wordType.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    compiled.querySelector('form')!.dispatchEvent(new Event('submit', { cancelable: true }));
+
+    http
+      .expectOne('/api/words')
+      .flush('Server error', { status: 500, statusText: 'Internal Server Error' });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(notifications.notifications()).toContainEqual(
+      expect.objectContaining({ type: 'error', message: 'Could not add the word.' }),
+    );
   });
 });

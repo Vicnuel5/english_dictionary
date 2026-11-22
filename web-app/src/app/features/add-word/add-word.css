@@ -132,32 +132,6 @@
   box-shadow: none;
 }
 
-.status {
-  margin: 0.5rem 0 0;
-  font-size: 0.8125rem;
-  text-align: center;
-  color: #188038;
-}
-
-.status-error {
-  color: #d93025;
-}
-
-.field-hint {
-  margin: -0.25rem 0 0;
-  font-size: 0.8125rem;
-  text-align: center;
-  color: #5f6368;
-}
-
-.field-hint a {
-  color: #1a73e8;
-}
-
-.field-hint--error {
-  color: #d93025;
-}
-
 @media (max-width: 600px) {
   .title {
     font-size: 1.5rem;

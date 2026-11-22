@@ -1,0 +1,121 @@
+:host {
+  position: fixed;
+  top: 80px;
+  right: 1.5rem;
+  z-index: 1000;
+  display: block;
+  pointer-events: none;
+}
+
+.notifications {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.notification {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: min(360px, calc(100vw - 2rem));
+  padding: 0.875rem 1rem;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(32, 33, 36, 0.25);
+  pointer-events: auto;
+  animation: notification-in 180ms ease-out;
+}
+
+.notification--success {
+  background: #188038;
+  animation:
+    notification-in 180ms ease-out,
+    notification-out 5000ms linear forwards;
+}
+
+.notification--error {
+  background: #d93025;
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+}
+
+.message {
+  flex: 1;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.close {
+  flex: none;
+  padding: 0;
+  margin-top: -2px;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #fff;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.close:hover {
+  opacity: 1;
+}
+
+.close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes notification-in {
+  from {
+    transform: translateX(1rem);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes notification-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  :host {
+    top: 72px;
+    right: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .notifications {
+    align-items: stretch;
+  }
+
+  .notification {
+    width: 100%;
+  }
+}
