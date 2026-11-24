@@ -23,25 +23,138 @@
       @if (results().length) {
         <table class="results">
           <caption class="sr-only">
-            Matches for "{{ submittedQuery() }}"
+            @if (submittedQuery()) {
+              Matches for "{{ submittedQuery() }}"
+            } @else {
+              All words
+            }
           </caption>
+          <colgroup>
+            <col class="column-word" />
+            <col class="column-translation" />
+            <col class="column-type" />
+            <col class="column-actions" />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Word</th>
               <th scope="col">Translation</th>
+              <th scope="col">Word type</th>
+              <th scope="col" class="actions-header">Actions</th>
             </tr>
           </thead>
           <tbody>
-            @for (entry of results(); track entry.word) {
-              <tr>
-                <td>{{ entry.word }}</td>
-                <td>{{ entry.translation }}</td>
-              </tr>
+            @for (entry of results(); track entry.id) {
+              @if (editingId() === entry.id) {
+                <tr>
+                  <td colspan="4">
+                    <form class="edit-form" (submit)="saveEdit($event)">
+                      <label class="sr-only" [for]="'edit-word-' + entry.id">Word</label>
+                      <input
+                        [id]="'edit-word-' + entry.id"
+                        name="editWord"
+                        class="input"
+                        type="text"
+                        autocomplete="off"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        autofocus
+                        [value]="editWord()"
+                        (input)="onEditWordInput($event)"
+                      />
+
+                      <label class="sr-only" [for]="'edit-translation-' + entry.id">
+                        Translation
+                      </label>
+                      <input
+                        [id]="'edit-translation-' + entry.id"
+                        name="editTranslation"
+                        class="input"
+                        type="text"
+                        autocomplete="off"
+                        [value]="editTranslation()"
+                        (input)="onEditTranslationInput($event)"
+                      />
+
+                      <label class="sr-only" [for]="'edit-type-' + entry.id">Word type</label>
+                      <select
+                        [id]="'edit-type-' + entry.id"
+                        name="editWordType"
+                        class="input select"
+                        [disabled]="typesLoading() || wordTypes().length === 0"
+                        (change)="onEditWordTypeChange($event)"
+                      >
+                        <option value="" disabled [selected]="editWordTypeId() === null">
+                          {{ typesLoading() ? 'Loading...' : 'Word type' }}
+                        </option>
+                        @for (wordType of wordTypes(); track wordType.id) {
+                          <option
+                            [value]="wordType.id"
+                            [selected]="wordType.id === editWordTypeId()"
+                          >
+                            {{ wordType.wordType }}
+                          </option>
+                        }
+                      </select>
+
+                      <button
+                        class="submit compact"
+                        type="submit"
+                        [disabled]="updating() || typesLoading() || wordTypes().length === 0"
+                      >
+                        Save
+                      </button>
+                      <button
+                        class="secondary compact"
+                        type="button"
+                        [disabled]="updating()"
+                        (click)="cancelEdit()"
+                      >
+                        Cancel
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              } @else {
+                <tr>
+                  <td>{{ entry.word }}</td>
+                  <td>{{ entry.translation }}</td>
+                  <td>{{ entry.wordType }}</td>
+                  <td class="actions">
+                    <button
+                      class="action"
+                      type="button"
+                      [disabled]="updating() || deletingId() !== null"
+                      (click)="startEdit(entry)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="action action--danger"
+                      type="button"
+                      [disabled]="updating() || deletingId() !== null"
+                      (click)="deleteWord(entry)"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>
-      } @else {
+
+        <app-pagination
+          [page]="page()"
+          [pageSize]="pageSize()"
+          [totalElements]="totalElements()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
+      } @else if (submittedQuery()) {
         <p class="empty">No matches for "{{ submittedQuery() }}".</p>
+      } @else {
+        <p class="empty">The dictionary is empty.</p>
       }
     } @else {
       <p class="hint">Type a word and press Search.</p>

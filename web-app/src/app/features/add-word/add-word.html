@@ -31,7 +31,7 @@
         [disabled]="typesLoading() || wordTypes().length === 0"
         (change)="onWordTypeChange($event)"
       >
-        <option value="" disabled>
+        <option value="" disabled hidden>
           {{ typesLoading() ? 'Loading...' : 'Word type' }}
         </option>
         @for (wordType of wordTypes(); track wordType.id) {

@@ -62,6 +62,7 @@ describe('AddWord', () => {
 
     expect(select.disabled).toBe(false);
     expect(select.options.length).toBe(3);
+    expect(select.options[0].hidden).toBe(true);
     expect(select.options[1].textContent).toContain('noun');
     expect(select.options[2].textContent).toContain('verb');
   });

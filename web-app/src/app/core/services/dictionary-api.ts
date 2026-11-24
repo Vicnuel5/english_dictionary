@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DictionaryEntry } from '../models/dictionary-entry';
+import { PageResponse } from '../models/page-response';
 import { WordRequestDTO } from '../models/word-request-dto';
 import { WordType } from '../models/word-type';
 import { WordTypeRequestDTO } from '../models/word-type-request-dto';
@@ -21,10 +22,22 @@ export class DictionaryApi {
     return this.http.post<void>(`${this.baseUrl}/words`, request);
   }
 
-  searchWords(query: string): Observable<DictionaryEntry[]> {
-    return this.http.get<DictionaryEntry[]>(`${this.baseUrl}/words`, {
-      params: { q: query },
+  searchWords(
+    query: string,
+    page: number,
+    size: number,
+  ): Observable<PageResponse<DictionaryEntry>> {
+    return this.http.get<PageResponse<DictionaryEntry>>(`${this.baseUrl}/words`, {
+      params: { q: query, page, size },
     });
+  }
+
+  updateWord(id: number, request: WordRequestDTO): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/words/${id}`, request);
+  }
+
+  deleteWord(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/words/${id}`);
   }
 
   getWordTypes(): Observable<WordType[]> {
@@ -33,5 +46,13 @@ export class DictionaryApi {
 
   addWordType(request: WordTypeRequestDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/word-types`, request);
+  }
+
+  updateWordType(id: number, request: WordTypeRequestDTO): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/word-types/${id}`, request);
+  }
+
+  deleteWordType(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/word-types/${id}`);
   }
 }

@@ -69,6 +69,14 @@
   cursor: pointer;
 }
 
+.select:required:invalid {
+  color: #9aa0a6;
+}
+
+.select option {
+  color: #202124;
+}
+
 .select:disabled {
   color: #9aa0a6;
   background-color: #f8f9fa;

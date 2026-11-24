@@ -1,0 +1,67 @@
+<nav class="pagination" aria-label="Pagination">
+  <p class="summary">Showing {{ firstItem() }}–{{ lastItem() }} of {{ totalElements() }}</p>
+
+  <div class="controls">
+    <button
+      class="page-button"
+      type="button"
+      aria-label="First page"
+      [disabled]="page() <= 0"
+      (click)="goTo(0)"
+    >
+      «
+    </button>
+    <button
+      class="page-button"
+      type="button"
+      aria-label="Previous page"
+      [disabled]="page() <= 0"
+      (click)="goTo(page() - 1)"
+    >
+      ‹
+    </button>
+
+    <div class="page-numbers">
+      @for (pageNumber of visiblePages(); track pageNumber) {
+        <button
+          class="page-button page-number"
+          type="button"
+          [class.page-number--active]="pageNumber === page()"
+          [attr.aria-current]="pageNumber === page() ? 'page' : null"
+          [attr.aria-label]="'Page ' + (pageNumber + 1)"
+          (click)="goTo(pageNumber)"
+        >
+          {{ pageNumber + 1 }}
+        </button>
+      }
+    </div>
+
+    <button
+      class="page-button"
+      type="button"
+      aria-label="Next page"
+      [disabled]="page() >= totalPages() - 1"
+      (click)="goTo(page() + 1)"
+    >
+      ›
+    </button>
+    <button
+      class="page-button"
+      type="button"
+      aria-label="Last page"
+      [disabled]="page() >= totalPages() - 1"
+      (click)="goTo(totalPages() - 1)"
+    >
+      »
+    </button>
+  </div>
+
+  <label class="page-size">
+    <span>Per page</span>
+    <select class="page-size-select" [value]="pageSize()" (change)="onPageSizeChange($event)">
+      @for (option of pageSizeOptions(); track option) {
+        <option [value]="option">{{ option }}</option>
+      }
+    </select>
+  </label>
+</nav>

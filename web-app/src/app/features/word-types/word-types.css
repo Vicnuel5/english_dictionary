@@ -100,6 +100,55 @@
   box-shadow: 0 1px 6px rgba(32, 33, 36, 0.24);
 }
 
+.secondary {
+  flex: none;
+  height: 44px;
+  padding: 0 1.25rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #3c4043;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.secondary:hover {
+  background: #f8f9fa;
+}
+
+.secondary:focus-visible {
+  outline: 3px solid rgba(26, 115, 232, 0.4);
+  outline-offset: 2px;
+}
+
+.secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.compact {
+  height: 36px;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  border-radius: 18px;
+}
+
+.edit-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-form .input {
+  flex: 1;
+  height: 40px;
+  padding: 0 1rem;
+  font-size: 0.9375rem;
+}
+
 .results {
   width: 100%;
   margin-top: 2rem;
@@ -129,6 +178,50 @@
   background: #f8f9fa;
 }
 
+.results .actions-header,
+.results td.actions {
+  text-align: right;
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+.action {
+  padding: 0;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1a73e8;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.action:hover {
+  text-decoration: underline;
+}
+
+.action:focus-visible {
+  outline: 2px solid rgba(26, 115, 232, 0.4);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.action--danger {
+  color: #d93025;
+}
+
+.action:disabled {
+  color: #9aa0a6;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.action + .action {
+  margin-left: 1rem;
+}
+
 .hint,
 .empty {
   margin: 2rem 0 0;
@@ -150,5 +243,17 @@
 
   .add-form .primary {
     width: 100%;
+  }
+
+  .edit-form {
+    flex-wrap: wrap;
+  }
+
+  .edit-form .input {
+    flex-basis: 100%;
+  }
+
+  .edit-form .compact {
+    flex: 1;
   }
 }

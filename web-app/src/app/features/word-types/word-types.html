@@ -41,13 +41,65 @@
         <thead>
           <tr>
             <th scope="col">Word type</th>
+            <th scope="col" class="actions-header">Actions</th>
           </tr>
         </thead>
         <tbody>
           @for (wordType of wordTypes(); track wordType.id) {
-            <tr>
-              <td>{{ wordType.wordType }}</td>
-            </tr>
+            @if (editingId() === wordType.id) {
+              <tr>
+                <td colspan="2">
+                  <form class="edit-form" (submit)="saveEdit($event)">
+                    <label class="sr-only" [for]="'edit-' + wordType.id">Word type</label>
+                    <input
+                      [id]="'edit-' + wordType.id"
+                      name="editWordType"
+                      class="input"
+                      type="text"
+                      autocomplete="off"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      autofocus
+                      [value]="editName()"
+                      (input)="onEditInput($event)"
+                    />
+                    <button class="primary compact" type="submit" [disabled]="updating()">
+                      Save
+                    </button>
+                    <button
+                      class="secondary compact"
+                      type="button"
+                      [disabled]="updating()"
+                      (click)="cancelEdit()"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            } @else {
+              <tr>
+                <td>{{ wordType.wordType }}</td>
+                <td class="actions">
+                  <button
+                    class="action"
+                    type="button"
+                    [disabled]="updating() || deletingId() !== null"
+                    (click)="startEdit(wordType)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="action action--danger"
+                    type="button"
+                    [disabled]="updating() || deletingId() !== null"
+                    (click)="deleteWordType(wordType)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            }
           }
         </tbody>
       </table>
